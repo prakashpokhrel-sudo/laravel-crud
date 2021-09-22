@@ -58,6 +58,16 @@
                 'user_id': user_id
             },
             success: function (data) {
+                var button = document.getElementById("status-btn-" + user_id);
+                if (data.status == 1) {
+                    button.classList.remove("btn-warning");
+                    button.classList.add("btn-success");
+                    button.innerText = 'Active';
+                } else {
+                    button.classList.add("btn-warning");
+                    button.classList.remove("btn-success");
+                    button.innerText = 'Inactive';
+                }
                 $('#notifDiv').fadeIn();
                 $('#notifDiv').css('background', 'green');
                 $('#notifDiv').text('Status Updated Successfully');
@@ -89,9 +99,9 @@
                     "data": null,
                     render: function (data, type, row) {
                         if (row.status == 1) {
-                            return `<button data-id="${row.id}" data-status="0" class="btn btn-sm btn-success toggle-class">Active</button>`;
+                            return `<button data-id="${row.id}" data-status="0" id="status-btn-${row.id}" class="btn btn-sm btn-success toggle-class">Active</button>`;
                         } else {
-                            return `<button data-id="${row.id}" data-status="1" class="btn btn-sm btn-warning toggle-class">Inactive</button>`;
+                            return `<button data-id="${row.id}" data-status="1" id="status-btn-${row.id}" class="btn btn-sm btn-warning toggle-class">Inactive</button>`;
                         }
                     }
                 },
