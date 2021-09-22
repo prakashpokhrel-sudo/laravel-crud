@@ -48,7 +48,6 @@
     $(document).on('click', '.toggle-class', function () {
         var status = $(this).data('status');
         var user_id = $(this).data('id');
-        console.log(status)
         $.ajax({
             type: 'GET',
             dataType: 'JSON',

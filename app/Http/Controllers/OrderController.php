@@ -58,8 +58,19 @@ class OrderController extends Controller
         $email = $record->email;
         $mobile = $record->mobile;
         $status = $record->status;
-        $total= $record->total_sum;
-        $count = $record->total_count;
+
+        $total_count=DB::table('users')
+            ->join('orders', 'orders.user_id', '=', 'users.id')
+            ->where('orders.user_id',$record->id)
+            ->groupBy('orders.user_id')
+            ->count();
+         $total_sum=DB::table('users')
+             ->join('orders', 'orders.user_id', '=', 'users.id')
+             ->where('orders.user_id',$record->id)
+             ->groupBy('orders.user_id')
+             ->sum('orders.total');
+        $total= $total_sum;
+        $count = $total_count;
 
         $data_arr[] = array(
           "id" => $id,
