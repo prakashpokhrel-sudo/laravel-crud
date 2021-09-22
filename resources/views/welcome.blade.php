@@ -59,13 +59,9 @@
             success: function (data) {
                 var button = document.getElementById("status-btn-" + user_id);
                 if (data.status == 1) {
-                    button.classList.remove("btn-warning");
-                    button.classList.add("btn-success");
-                    button.innerText = 'Active';
+                    button.innerHTML=`<button data-id="${user_id}" data-status="0" class="btn btn-sm btn-success toggle-class">Active</button>`;
                 } else {
-                    button.classList.add("btn-warning");
-                    button.classList.remove("btn-success");
-                    button.innerText = 'Inactive';
+                    button.innerHTML = `<button data-id="${user_id}" data-status="1" class="btn btn-sm btn-warning toggle-class">Inactive</button>`;
                 }
                 $('#notifDiv').fadeIn();
                 $('#notifDiv').css('background', 'green');
@@ -98,9 +94,9 @@
                     "data": null,
                     render: function (data, type, row) {
                         if (row.status == 1) {
-                            return `<button data-id="${row.id}" data-status="0" id="status-btn-${row.id}" class="btn btn-sm btn-success toggle-class">Active</button>`;
+                            return `<div id="status-btn-${row.id}"><button data-id="${row.id}" data-status="0" class="btn btn-sm btn-success toggle-class">Active</button></div>`;
                         } else {
-                            return `<button data-id="${row.id}" data-status="1" id="status-btn-${row.id}" class="btn btn-sm btn-warning toggle-class">Inactive</button>`;
+                            return `<div id="status-btn-${row.id}"><button data-id="${row.id}" data-status="1" class="btn btn-sm btn-warning toggle-class">Inactive</button></div>`;
                         }
                     }
                 },
