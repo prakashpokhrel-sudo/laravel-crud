@@ -46,7 +46,7 @@
 
 <script>
     $(document).on('click', '.toggle-class', function () {
-        var status = $(this).prop('checked') == true ? 1 : 0;
+        var status = $(this).data('status');
         var user_id = $(this).data('id');
         console.log(status)
         $.ajax({
@@ -89,9 +89,9 @@
                     "data": null,
                     render: function (data, type, row) {
                         if (row.status == 1) {
-                            return `<button data-id="${row.id}" class="btn btn-sm btn-success toggle-class">Active</button>`;
+                            return `<button data-id="${row.id}" data-status="0" class="btn btn-sm btn-success toggle-class">Active</button>`;
                         } else {
-                            return `<button data-id="${row.id}" class="btn btn-sm btn-warning toggle-class">Inactive</button>`;
+                            return `<button data-id="${row.id}" data-status="1" class="btn btn-sm btn-warning toggle-class">Inactive</button>`;
                         }
                     }
                 },
