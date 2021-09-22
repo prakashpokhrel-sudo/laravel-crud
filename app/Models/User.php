@@ -25,6 +25,8 @@ class User extends Authenticatable
         'status'
     ];
 
+    protected $appends = ['total_count', 'total_sum'];
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -44,17 +46,20 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-     public function order(){
-     return $this->hasMany(Order::class);
+    public function order()
+    {
+        return $this->hasMany(Order::class);
     }
 
-   public function countTotal(){
-        $orderCount = Order::where('user_id',$this->id)->count();
+    public function getTotalCountAttribute()
+    {
+        $orderCount = Order::where('user_id', $this->id)->count();
         return $orderCount;
     }
 
-    public function totalSum(){
-        $total = Order::where('user_id',$this->id)->sum('total');
+    public function getTotalSumAttribute()
+    {
+        $total = Order::where('user_id', $this->id)->sum('total');
         return $total;
     }
 }

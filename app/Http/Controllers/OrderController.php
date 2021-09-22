@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 
 class OrderController extends Controller
-{   
+{
      public function index()
     {
       $abc=User::get();
@@ -22,7 +22,7 @@ class OrderController extends Controller
    AJAX request
    */
    public function getUser(Request $request){
-    
+
      ## Read value
      $draw = $request->get('draw');
      $start = $request->get("start");
@@ -51,26 +51,27 @@ class OrderController extends Controller
        ->get();
 
      $data_arr = array();
-     
+
      foreach($records as $record){
         $id = $record->id;
         $name = $record->name;
         $email = $record->email;
         $mobile = $record->mobile;
         $status = $record->status;
-        $total= $record->total;
-        
+        $total= $record->total_sum;
+        $count = $record->total_count;
+
         $data_arr[] = array(
           "id" => $id,
           "name" => $name,
           "email" => $email,
           "mobile" => $mobile,
           "status"=>$status,
-          "total"=>$total
-      
+          "total"=>$total,
+            "count"=>$count
         );
      }
-     
+
      $response = array(
         "draw" => intval($draw),
         "iTotalRecords" => $totalRecords,
