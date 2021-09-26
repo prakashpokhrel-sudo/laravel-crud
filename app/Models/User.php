@@ -6,10 +6,11 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 use App\Models\Order;
+use Laravel\Sanctum\HasApiTokens;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject// Added here
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -22,10 +23,11 @@ class User extends Authenticatable
         'name',
         'email',
         'mobile',
-        'status'
+        'status',
+        'password'
     ];
 
-    protected $appends = ['total_count', 'total_sum'];
+   
 
     /**
      * The attributes that should be hidden for serialization.
@@ -51,15 +53,20 @@ class User extends Authenticatable
         return $this->hasMany(Order::class);
     }
 
-    public function getTotalCountAttribute()
+      // Add this method
+    public function getJWTIdentifier()
     {
-        $orderCount = Order::where('user_id', $this->id)->count();
-        return $orderCount;
+        return $this->getKey();
     }
 
-    public function getTotalSumAttribute()
+    // Add this method
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
     {
-        $total = Order::where('user_id', $this->id)->sum('total');
-        return $total;
+        return [];
     }
 }

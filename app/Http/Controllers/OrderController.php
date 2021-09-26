@@ -9,20 +9,17 @@ use Illuminate\Support\Facades\DB;
 
 
 class OrderController extends Controller
-{
+{   
+     
      public function index()
     {
-      $abc=User::get();
-      DB::table('orders')->selectRaw('*, count(*)')->groupBy('user_id');
-
-       return view('welcome',compact('abc'));
+     return view('welcome');
     }
 
     /*
    AJAX request
    */
    public function getUser(Request $request){
-
      ## Read value
      $draw = $request->get('draw');
      $start = $request->get("start");
@@ -43,13 +40,16 @@ class OrderController extends Controller
      $totalRecordswithFilter = User::select('count(*) as allcount')->where('name', 'like', '%' .$searchValue . '%')->count();
 
      // Fetch records
-     $records = User::orderBy($columnName,$columnSortOrder)
+     $records = DB::table('users')->orderBy($columnName,$columnSortOrder)
+       ->join('orders', 'orders.user_id', '=', 'users.id')
+       ->where('orders.user_id')
        ->where('users.name', 'like', '%' .$searchValue . '%')
        ->select('users.*')
        ->skip($start)
        ->take($rowperpage)
        ->get();
-
+      
+       
      $data_arr = array();
 
      foreach($records as $record){
@@ -58,19 +58,8 @@ class OrderController extends Controller
         $email = $record->email;
         $mobile = $record->mobile;
         $status = $record->status;
-
-        $total_count=DB::table('users')
-            ->join('orders', 'orders.user_id', '=', 'users.id')
-            ->where('orders.user_id',$record->id)
-            ->groupBy('orders.user_id')
-            ->count();
-         $total_sum=DB::table('users')
-             ->join('orders', 'orders.user_id', '=', 'users.id')
-             ->where('orders.user_id',$record->id)
-             ->groupBy('orders.user_id')
-             ->sum('orders.total');
-        $total= $total_sum;
-        $count = $total_count;
+        $total= $record->total;
+        $count = $record->count;
 
         $data_arr[] = array(
           "id" => $id,
@@ -79,7 +68,7 @@ class OrderController extends Controller
           "mobile" => $mobile,
           "status"=>$status,
           "total"=>$total,
-            "count"=>$count
+          "count"=>$count
         );
      }
 
@@ -99,4 +88,16 @@ class OrderController extends Controller
         $user->save();
         return response()->json(['success' => 'Status Changed Successfully','status'=>$user->status]);
     }
-}
+  
+     public function totalOrders()
+   {
+        $id = auth()->user()->id;
+        $orders = User::find($id)->order;
+        return response()->json([
+            "status" => 1,
+            "message" => "Total User Orders",
+            "data" => $orders
+        ]);
+
+   }
+  }

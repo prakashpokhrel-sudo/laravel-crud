@@ -10,7 +10,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">All Datas</h5>
-                    <table id='empTable' width='100%' border="1" style='border-collapse: collapse;'>
+                    <table id="userOrder" width="100%"  style="border-collapse: collapse;">
                         <thead>
 
                         <tr>
@@ -80,7 +80,7 @@
     $(document).ready(function () {
 
         // DataTable
-        $('#empTable').DataTable({
+        $('#userOrder').DataTable({
             processing: true,
             serverSide: true,
             ajax: "{{route('users.details')}}",
