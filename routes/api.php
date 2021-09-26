@@ -2,8 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\Api\UserApiController;
 
 
 /*
@@ -17,14 +17,14 @@ use App\Http\Controllers\OrderController;
 |
 */
 
-Route::post("register",[UserController::class, "register"]);
-Route::post("login",[UserController::class, "login"]);
+Route::post("register",[UserApiController::class, "register"]);
+Route::post("login",[UserApiController::class, "login"]);
 
 Route::group(["middleware"=>["api"]], function(){
     //user api
-Route::get("profile", [UserController::class, "profile"]);
+Route::get("profile", [UserApiController::class, "profile"]);
     // Api route
-Route::get("total-orders",[OrderController::class, "totalOrders"]); 
+Route::get("total-orders",[OrderApiController::class, "totalOrders"]); 
 });
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

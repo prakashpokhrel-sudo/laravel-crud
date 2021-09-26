@@ -1,17 +1,19 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 
-class UserController extends Controller
+class UserApiController extends Controller
 {
     public function register(Request $request)
     {
         //validation
         $request->validate([
-            "email" => "required|email",
+            "name"=>"required",
+            "email" => "required|email|unique:users",
             "password" => "required"
         ]);
 
@@ -62,7 +64,6 @@ class UserController extends Controller
             "data" => $user_data
         ]);
     }
-
 
 
 }

@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
-
 class OrderController extends Controller
 {   
      
@@ -41,15 +40,12 @@ class OrderController extends Controller
 
      // Fetch records
      $records = DB::table('users')->orderBy($columnName,$columnSortOrder)
-       ->join('orders', 'orders.user_id', '=', 'users.id')
-       ->where('orders.user_id')
        ->where('users.name', 'like', '%' .$searchValue . '%')
        ->select('users.*')
        ->skip($start)
        ->take($rowperpage)
        ->get();
-      
-       
+
      $data_arr = array();
 
      foreach($records as $record){
@@ -58,8 +54,18 @@ class OrderController extends Controller
         $email = $record->email;
         $mobile = $record->mobile;
         $status = $record->status;
-        $total= $record->total;
-        $count = $record->count;
+        $total_count=DB::table('users')
+            ->join('orders', 'orders.user_id', '=', 'users.id')
+            ->where('orders.user_id',$record->id)
+            ->groupBy('orders.user_id')
+            ->count();
+         $total_sum=DB::table('users')
+             ->join('orders', 'orders.user_id', '=', 'users.id')
+             ->where('orders.user_id',$record->id)
+             ->groupBy('orders.user_id')
+             ->sum('orders.total');
+        $total= $total_sum;
+        $count = $total_count;
 
         $data_arr[] = array(
           "id" => $id,
@@ -88,16 +94,4 @@ class OrderController extends Controller
         $user->save();
         return response()->json(['success' => 'Status Changed Successfully','status'=>$user->status]);
     }
-  
-     public function totalOrders()
-   {
-        $id = auth()->user()->id;
-        $orders = User::find($id)->order;
-        return response()->json([
-            "status" => 1,
-            "message" => "Total User Orders",
-            "data" => $orders
-        ]);
-
-   }
   }
