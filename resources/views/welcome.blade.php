@@ -29,9 +29,53 @@
     </div>
 </div>
 </div>
+
+
 <!-- status changing -->
-<script>
-    $(document).on('click', '.toggle-class', function () {
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+        crossorigin="anonymous"></script>
+<script
+    src="http://code.jquery.com/jquery-3.5.1.js"
+    integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+    crossorigin="anonymous"></script>
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+        crossorigin="anonymous"></script>
+<!-- ajax cdn -->
+<script src="https://cdn.datatables.net/1.11.2/js/jquery.dataTables.min.js"></script>
+
+<script type="text/javascript">    
+$(document).ready(function () {
+    $('#userOrder').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{route('users.details')}}",
+
+        columns: [
+            {data: 'id'},
+            {data: 'name'},
+            {data: 'email'},
+            {data: 'mobile'},
+            {
+                "data": null,
+                render: function (data, type, row) {
+                    if (row.status == 1) {
+                        return `<div id="status-btn-${row.id}"><button data-id="${row.id}" data-status="0" class="btn btn-sm btn-success toggle-class">Active</button></div>`;
+                    } else {
+                        return `<div id="status-btn-${row.id}"><button data-id="${row.id}" data-status="1" class="btn btn-sm btn-warning toggle-class">Inactive</button></div>`;
+                    }
+                }
+            },
+            {data: 'total'},
+            {data: 'count'},
+
+        ]
+    });
+
+    $('.toggle-class').on('click', function () {
         var status = $(this).data('status');
         var user_id = $(this).data('id');
         $.ajax({
@@ -58,54 +102,5 @@
             }
         });
     });
+});
 </script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
-        crossorigin="anonymous"></script>
-<script
-    src="http://code.jquery.com/jquery-3.5.1.js"
-    integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
-    crossorigin="anonymous"></script>
-<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
-<!-- JavaScript Bundle with Popper -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
-        crossorigin="anonymous"></script>
-<!-- ajax call -->
-<!-- Script -->
-<script type="text/javascript">
-    $(document).ready(function () {
-
-        // DataTable
-        $('#userOrder').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: "{{route('users.details')}}",
-
-            columns: [
-                {data: 'id'},
-                {data: 'name'},
-                {data: 'email'},
-                {data: 'mobile'},
-                {
-                    "data": null,
-                    render: function (data, type, row) {
-                        if (row.status == 1) {
-                            return `<div id="status-btn-${row.id}"><button data-id="${row.id}" data-status="0" class="btn btn-sm btn-success toggle-class">Active</button></div>`;
-                        } else {
-                            return `<div id="status-btn-${row.id}"><button data-id="${row.id}" data-status="1" class="btn btn-sm btn-warning toggle-class">Inactive</button></div>`;
-                        }
-                    }
-                },
-                {data: 'total'},
-                {data: 'count'},
-
-            ]
-
-        });
-
-    });
-</script>
-
-<!-- ajax cdn -->
-<script src="https://cdn.datatables.net/1.11.2/js/jquery.dataTables.min.js"></script>
